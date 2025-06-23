@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/components/Post';
 import { LoginArea } from '@/components/auth/LoginArea';
-import { EditProfileForm } from '@/components/EditProfileForm';
 import { genUserName } from '@/lib/genUserName';
 import { Calendar, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -48,11 +47,10 @@ export default function Profile() {
   const author = useAuthor(pubkey);
   const metadata = author.data?.metadata;
   const displayName = metadata?.name || genUserName(pubkey);
-  const isOwnProfile = user?.pubkey === pubkey;
 
   useSeoMeta({
-    title: `${displayName} - Nostr TossUp`,
-    description: metadata?.about || `Profile of ${displayName} on Nostr TossUp`,
+    title: `${displayName} - のすとら胴上げ部`,
+    description: metadata?.about || `Profile of ${displayName} on のすとら胴上げ部`,
   });
 
   // Get current user's follow list (kind 3)
@@ -92,7 +90,10 @@ export default function Profile() {
           <div className="container mx-auto max-w-2xl px-4 py-3">
             <div className="flex items-center justify-between">
               <Link to="/">
-                <h1 className="text-xl font-bold pl-3 hover:opacity-80 transition-opacity cursor-pointer">Nostr TossUp</h1>
+                <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
+                <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
+                <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
+              </div>
               </Link>
               <div className="flex items-center gap-2">
                 <LoginArea className="max-w-60" />
@@ -158,7 +159,10 @@ export default function Profile() {
         <div className="container mx-auto max-w-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/">
-              <h1 className="text-xl font-bold pl-3 hover:opacity-80 transition-opacity cursor-pointer">Nostr TossUp</h1>
+              <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
+                <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
+                <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
+              </div>
             </Link>
             <div className="flex items-center gap-2">
               <LoginArea className="max-w-60" />
@@ -192,9 +196,7 @@ export default function Profile() {
                   </AvatarFallback>
                 </Avatar>
 
-                {isOwnProfile ? (
-                  <EditProfileForm />
-                ) : (
+
                   <Button
                     variant={isFollowing ? "default" : "outline"}
                     onClick={handleFollowToggle}
@@ -202,7 +204,6 @@ export default function Profile() {
                   >
                     {isFollowing ? "Following" : "Follow"}
                   </Button>
-                )}
               </div>
 
               <div className="space-y-2">
