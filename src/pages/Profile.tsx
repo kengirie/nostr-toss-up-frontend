@@ -6,7 +6,7 @@ import { useNostr } from '@/hooks/useNostr';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -162,7 +162,6 @@ export default function Profile() {
               <h1 className="text-xl font-bold pl-3 hover:opacity-80 transition-opacity cursor-pointer">Nostr TossUp</h1>
             </Link>
             <div className="flex items-center gap-2">
-              <RelayMenu />
               <LoginArea className="max-w-60" />
             </div>
           </div>

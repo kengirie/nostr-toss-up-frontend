@@ -2,10 +2,8 @@ import { useSeoMeta } from '@unhead/react';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PostComposer } from '@/components/PostComposer';
 import { Timeline } from '@/components/Timeline';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 const Index = () => {
-  const { user } = useCurrentUser();
 
   useSeoMeta({
     title: 'Nostr TossUp',
@@ -28,22 +26,10 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto max-w-2xl px-4 py-6">
-        {user ? (
           <div className="space-y-6">
             <PostComposer />
             <Timeline />
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">Welcome to Nostr TossUp</h2>
-            <p className="text-muted-foreground mb-6">
-              Connect to the decentralized social web. Log in to start posting and following others.
-            </p>
-            <div className="flex justify-center">
-              <LoginArea className="max-w-xs" />
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );
