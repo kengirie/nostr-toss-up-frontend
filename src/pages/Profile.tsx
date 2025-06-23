@@ -5,6 +5,7 @@ import { nip19 } from 'nostr-tools';
 import { useNostr } from '@/hooks/useNostr';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,7 @@ import { Post } from '@/components/Post';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { EditProfileForm } from '@/components/EditProfileForm';
 import { genUserName } from '@/lib/genUserName';
-import { ArrowLeft, Calendar, Link as LinkIcon, MapPin } from 'lucide-react';
+import { Calendar, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { NostrEvent } from '@nostrify/nostrify';
 
@@ -28,6 +29,7 @@ export default function Profile() {
   const { nip19: nip19Param } = useParams<{ nip19: string }>();
   const { user } = useCurrentUser();
   const { nostr } = useNostr();
+  const { mutate: createEvent, isPending: isPublishing } = useNostrPublish();
 
   let pubkey = '';
   let isValidNip19 = false;
@@ -50,8 +52,23 @@ export default function Profile() {
   const isOwnProfile = user?.pubkey === pubkey;
 
   useSeoMeta({
-    title: `${displayName} - Nostr Social`,
-    description: metadata?.about || `Profile of ${displayName} on Nostr Social`,
+    title: `${displayName} - Nostr TossUp`,
+    description: metadata?.about || `Profile of ${displayName} on Nostr TossUp`,
+  });
+
+  // Get current user's follow list (kind 3)
+  const { data: followList, refetch: refetchFollowList } = useQuery({
+    queryKey: ['follow-list', user?.pubkey],
+    queryFn: async (c) => {
+      if (!user?.pubkey) return null;
+      const signal = AbortSignal.any([c.signal, AbortSignal.timeout(5000)]);
+      const events = await nostr.query([
+        { kinds: [3], authors: [user.pubkey], limit: 1 }
+      ], { signal });
+
+      return events[0] || null;
+    },
+    enabled: !!user?.pubkey,
   });
 
   const { data: posts, isLoading: postsLoading } = useQuery({
@@ -61,7 +78,7 @@ export default function Profile() {
       const events = await nostr.query([
         { kinds: [1], authors: [pubkey], limit: 50 }
       ], { signal });
-      
+
       return events
         .filter(validateTextNote)
         .sort((a, b) => b.created_at - a.created_at);
@@ -73,17 +90,14 @@ export default function Profile() {
     return (
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-          <div className="container mx-auto px-4 py-3">
+          <div className="container mx-auto max-w-2xl px-4 py-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Link to="/">
-                  <Button variant="ghost" size="sm">
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <h1 className="text-xl font-bold">Profile</h1>
+              <Link to="/">
+                <h1 className="text-xl font-bold pl-3 hover:opacity-80 transition-opacity cursor-pointer">Nostr TossUp</h1>
+              </Link>
+              <div className="flex items-center gap-2">
+                <LoginArea className="max-w-60" />
               </div>
-              <LoginArea className="max-w-60" />
             </div>
           </div>
         </header>
@@ -98,6 +112,39 @@ export default function Profile() {
     );
   }
 
+  // Check if current user is following this profile
+  const isFollowing = followList?.tags.some((tag: string[]) =>
+    tag[0] === 'p' && tag[1] === pubkey
+  ) || false;
+
+  const handleFollowToggle = async () => {
+    if (!user?.pubkey || !pubkey) return;
+
+    const currentTags = followList?.tags || [];
+    let newTags;
+
+    if (isFollowing) {
+      // Unfollow: remove the p tag for this pubkey
+      newTags = currentTags.filter((tag: string[]) =>
+        !(tag[0] === 'p' && tag[1] === pubkey)
+      );
+    } else {
+      // Follow: add new p tag for this pubkey
+      newTags = [...currentTags, ['p', pubkey]];
+    }
+
+    createEvent({
+      kind: 3,
+      content: '',
+      tags: newTags
+    });
+
+    // Refetch the follow list after updating
+    setTimeout(() => {
+      refetchFollowList();
+    }, 1000);
+  };
+
   const formatDate = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -109,22 +156,15 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto max-w-2xl px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-xl font-bold">{displayName}</h1>
-                <p className="text-sm text-muted-foreground">
-                  {posts?.length || 0} posts
-                </p>
-              </div>
+            <Link to="/">
+              <h1 className="text-xl font-bold pl-3 hover:opacity-80 transition-opacity cursor-pointer">Nostr TossUp</h1>
+            </Link>
+            <div className="flex items-center gap-2">
+              <RelayMenu />
+              <LoginArea className="max-w-60" />
             </div>
-            <LoginArea className="max-w-60" />
           </div>
         </div>
       </header>
@@ -143,7 +183,7 @@ export default function Profile() {
                 />
               )}
             </div>
-            
+
             {/* Profile Info */}
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -153,14 +193,20 @@ export default function Profile() {
                     {displayName[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                
+
                 {isOwnProfile ? (
                   <EditProfileForm />
                 ) : (
-                  <Button variant="outline">Follow</Button>
+                  <Button
+                    variant={isFollowing ? "default" : "outline"}
+                    onClick={handleFollowToggle}
+                    disabled={isPublishing}
+                  >
+                    {isFollowing ? "Following" : "Follow"}
+                  </Button>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <div>
                   <h2 className="text-xl font-bold">{displayName}</h2>
@@ -170,11 +216,11 @@ export default function Profile() {
                     </Badge>
                   )}
                 </div>
-                
+
                 {metadata?.about && (
                   <p className="text-sm text-muted-foreground">{metadata.about}</p>
                 )}
-                
+
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   {metadata?.website && (
                     <div className="flex items-center space-x-1">
@@ -185,21 +231,14 @@ export default function Profile() {
                         rel="noopener noreferrer"
                         className="hover:text-primary hover:underline"
                       >
-                        {metadata.website.replace(/^https?:\/\//, '')}
+{metadata.website.replace(/^https?:\/\//, '')}
                       </a>
                     </div>
                   )}
-                  
-                  {metadata?.location && (
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{metadata.location}</span>
-                    </div>
-                  )}
-                  
+
                   <div className="flex items-center space-x-1">
                     <Calendar className="h-4 w-4" />
-                    <span>Joined {formatDate(author.data?.created_at || 0)}</span>
+                    <span>Joined {formatDate(author.data?.event?.created_at || 0)}</span>
                   </div>
                 </div>
               </div>
@@ -210,7 +249,7 @@ export default function Profile() {
         {/* Posts */}
         <div className="mt-6 space-y-4">
           <h3 className="text-lg font-semibold">Posts</h3>
-          
+
           {postsLoading ? (
             <div className="space-y-4">
               {Array.from({ length: 5 }).map((_, i) => (

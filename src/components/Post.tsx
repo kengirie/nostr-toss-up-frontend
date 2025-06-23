@@ -11,7 +11,7 @@ import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { genUserName } from '@/lib/genUserName';
-import { Heart, MessageCircle, Repeat2, Share, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, MoreHorizontal } from 'lucide-react';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 interface PostProps {
@@ -22,11 +22,11 @@ export function Post({ event }: PostProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
-  
+
   const { user } = useCurrentUser();
   const { mutate: createEvent, isPending } = useNostrPublish();
   const author = useAuthor(event.pubkey);
-  
+
   const metadata = author.data?.metadata;
   const displayName = metadata?.name || genUserName(event.pubkey);
   const profileImage = metadata?.picture;
@@ -37,12 +37,12 @@ export function Post({ event }: PostProps) {
     const date = new Date(timestamp * 1000);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
-    
+
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) return `${days}d`;
     if (hours > 0) return `${hours}h`;
     if (minutes > 0) return `${minutes}m`;
@@ -51,7 +51,7 @@ export function Post({ event }: PostProps) {
 
   const handleLike = () => {
     if (!user) return;
-    
+
     createEvent({
       kind: 7,
       content: isLiked ? '' : '+',
@@ -61,13 +61,13 @@ export function Post({ event }: PostProps) {
         ['k', '1']
       ]
     });
-    
+
     setIsLiked(!isLiked);
   };
 
   const handleRepost = () => {
     if (!user) return;
-    
+
     createEvent({
       kind: 6,
       content: '',
@@ -76,7 +76,7 @@ export function Post({ event }: PostProps) {
         ['p', event.pubkey]
       ]
     });
-    
+
     setIsReposted(!isReposted);
   };
 
@@ -118,12 +118,12 @@ export function Post({ event }: PostProps) {
           </Button>
         </div>
       </CardHeader>
-      
+
       <CardContent className="pb-2">
         <div className="whitespace-pre-wrap break-words mb-4">
           <NoteContent event={event} className="text-sm" />
         </div>
-        
+
         <div className="flex items-center justify-between max-w-md">
           <Button
             variant="ghost"
@@ -134,47 +134,38 @@ export function Post({ event }: PostProps) {
             <MessageCircle className="h-4 w-4" />
             <span className="text-sm">Reply</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={handleRepost}
             disabled={isPending}
             className={`flex items-center space-x-2 rounded-full px-3 ${
-              isReposted 
-                ? 'text-green-600 bg-green-50' 
+              isReposted
+                ? 'text-green-600 bg-green-50'
                 : 'text-muted-foreground hover:text-green-600 hover:bg-green-50'
             }`}
           >
             <Repeat2 className="h-4 w-4" />
             <span className="text-sm">Repost</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={handleLike}
             disabled={isPending}
             className={`flex items-center space-x-2 rounded-full px-3 ${
-              isLiked 
-                ? 'text-red-600 bg-red-50' 
+              isLiked
+                ? 'text-red-600 bg-red-50'
                 : 'text-muted-foreground hover:text-red-600 hover:bg-red-50'
             }`}
           >
             <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
             <span className="text-sm">Like</span>
           </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center space-x-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-full px-3"
-          >
-            <Share className="h-4 w-4" />
-            <span className="text-sm">Share</span>
-          </Button>
         </div>
-        
+
         {showReplyBox && (
           <ReplyBox
             replyTo={event}
