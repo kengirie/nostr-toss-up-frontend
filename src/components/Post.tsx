@@ -4,7 +4,6 @@ import { nip19 } from 'nostr-tools';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { NoteContent } from '@/components/NoteContent';
 import { ReplyBox } from '@/components/ReplyBox';
 import { useAuthor } from '@/hooks/useAuthor';
@@ -99,11 +98,6 @@ export function Post({ event }: PostProps) {
               <Link to={`/profile/${npub}`} className="hover:underline min-w-0 flex-shrink">
                 <p className="font-semibold text-sm truncate">{displayName}</p>
               </Link>
-              {metadata?.nip05 && (
-                <Badge variant="secondary" className="text-xs flex-shrink-0">
-                  {metadata.nip05}
-                </Badge>
-              )}
               <span className="text-muted-foreground text-sm flex-shrink-0">·</span>
               <span className="text-muted-foreground text-sm flex-shrink-0">
                 {formatDate(event.created_at)}

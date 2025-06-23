@@ -9,7 +9,6 @@ import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/components/Post';
 import { LoginArea } from '@/components/auth/LoginArea';
@@ -209,11 +208,6 @@ export default function Profile() {
               <div className="space-y-2">
                 <div>
                   <h2 className="text-xl font-bold truncate">{displayName}</h2>
-                  {metadata?.nip05 && (
-                    <Badge variant="secondary" className="mt-1">
-                      {metadata.nip05}
-                    </Badge>
-                  )}
                 </div>
 
                 {metadata?.about && (
