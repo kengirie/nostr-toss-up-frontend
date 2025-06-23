@@ -208,7 +208,7 @@ export default function Profile() {
 
               <div className="space-y-2">
                 <div>
-                  <h2 className="text-xl font-bold">{displayName}</h2>
+                  <h2 className="text-xl font-bold truncate">{displayName}</h2>
                   {metadata?.nip05 && (
                     <Badge variant="secondary" className="mt-1">
                       {metadata.nip05}
@@ -217,7 +217,7 @@ export default function Profile() {
                 </div>
 
                 {metadata?.about && (
-                  <p className="text-sm text-muted-foreground">{metadata.about}</p>
+                  <p className="text-sm text-muted-foreground truncate">{metadata.about}</p>
                 )}
 
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
