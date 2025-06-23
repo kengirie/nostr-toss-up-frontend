@@ -211,7 +211,7 @@ export default function Profile() {
                 </div>
 
                 {metadata?.about && (
-                  <p className="text-sm text-muted-foreground truncate">{metadata.about}</p>
+                  <p className="text-sm text-muted-foreground break-words">{metadata.about}</p>
                 )}
 
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">

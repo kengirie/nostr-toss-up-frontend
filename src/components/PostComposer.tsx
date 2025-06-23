@@ -42,13 +42,13 @@ export function PostComposer() {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <div className="flex items-center space-x-3">
-          <Avatar className="h-10 w-10">
+        <div className="flex items-center space-x-3 min-w-0">
+          <Avatar className="h-10 w-10 flex-shrink-0">
             <AvatarImage src={profileImage} alt={displayName} />
             <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div>
-            <p className="font-semibold text-sm">{displayName}</p>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-sm truncate">{displayName}</p>
           </div>
         </div>
       </CardHeader>
