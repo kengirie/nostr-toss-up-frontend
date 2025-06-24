@@ -30,7 +30,12 @@ export function useCurrentUser() {
         const user = loginToUser(login);
         users.push(user);
       } catch (error) {
-        console.warn('Skipped invalid login', login.id, error);
+        // Only log extension errors in development
+        if (login.type === 'extension') {
+          console.debug('Extension login unavailable, please install a Nostr browser extension');
+        } else {
+          console.warn('Skipped invalid login', login.id, error);
+        }
       }
     }
 
