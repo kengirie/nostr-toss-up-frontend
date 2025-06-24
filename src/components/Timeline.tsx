@@ -3,7 +3,7 @@ import { useNostr } from '@/hooks/useNostr';
 import { Post } from '@/components/Post';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { RelaySelector } from '@/components/RelaySelector';
+import { MultiRelaySelector } from '@/components/MultiRelaySelector';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 function validateTextNote(event: NostrEvent): boolean {
@@ -35,9 +35,9 @@ export function Timeline() {
           <CardContent className="py-12 px-8 text-center">
             <div className="max-w-sm mx-auto space-y-6">
               <p className="text-muted-foreground">
-                Failed to load posts. Try another relay?
+                Failed to load posts. Try other relays?
               </p>
-              <RelaySelector className="w-full" />
+              <MultiRelaySelector className="w-full" />
             </div>
           </CardContent>
         </Card>
@@ -84,9 +84,9 @@ export function Timeline() {
           <CardContent className="py-12 px-8 text-center">
             <div className="max-w-sm mx-auto space-y-6">
               <p className="text-muted-foreground">
-                No posts found. Try another relay?
+                No posts found. Try other relays?
               </p>
-              <RelaySelector className="w-full" />
+              <MultiRelaySelector className="w-full" />
             </div>
           </CardContent>
         </Card>

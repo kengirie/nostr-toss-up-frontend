@@ -15,6 +15,7 @@ import { LoginArea } from '@/components/auth/LoginArea';
 import { genUserName } from '@/lib/genUserName';
 import { Calendar, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { RelaySettingsButton } from '@/components/RelaySettingsButton';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 function validateTextNote(event: NostrEvent): boolean {
@@ -165,6 +166,7 @@ export default function Profile() {
               </div>
             </Link>
             <div className="flex items-center gap-2">
+              {user && <RelaySettingsButton />}
               <LoginArea className="max-w-60" />
             </div>
           </div>
