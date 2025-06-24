@@ -97,6 +97,7 @@ export default function Profile() {
               </div>
               </Link>
               <div className="flex items-center gap-2">
+                <RelaySettingsButton />
                 <LoginArea className="max-w-60" />
               </div>
             </div>
@@ -166,7 +167,7 @@ export default function Profile() {
               </div>
             </Link>
             <div className="flex items-center gap-2">
-              {user && <RelaySettingsButton />}
+              <RelaySettingsButton/>
               <LoginArea className="max-w-60" />
             </div>
           </div>

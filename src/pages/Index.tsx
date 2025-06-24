@@ -3,10 +3,7 @@ import { LoginArea } from '@/components/auth/LoginArea';
 import { PostComposer } from '@/components/PostComposer';
 import { Timeline } from '@/components/Timeline';
 import { RelaySettingsButton } from '@/components/RelaySettingsButton';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-
 const Index = () => {
-  const { user } = useCurrentUser();
 
   useSeoMeta({
     title: 'のすとら胴上げ部',
@@ -24,7 +21,7 @@ const Index = () => {
               <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
             </div>
             <div className="flex items-center gap-2">
-              {user && <RelaySettingsButton />}
+              <RelaySettingsButton />
               <LoginArea className="max-w-60" />
             </div>
           </div>

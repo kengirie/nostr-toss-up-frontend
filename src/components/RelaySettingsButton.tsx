@@ -16,7 +16,7 @@ export function RelaySettingsButton({ className }: RelaySettingsButtonProps) {
         variant="outline"
         size="sm"
         onClick={() => setRelaySettingsOpen(true)}
-        className={className}
+        className={`h-10 w-10 p-0 ${className || ''}`}
       >
         <Wifi className="h-4 w-4" />
       </Button>
