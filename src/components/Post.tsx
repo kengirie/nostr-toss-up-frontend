@@ -10,6 +10,7 @@ import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { genUserName } from '@/lib/genUserName';
+import { extractImageUrls } from '@/lib/extractImages';
 import { Heart, MessageCircle, Repeat2, MoreHorizontal } from 'lucide-react';
 import type { NostrEvent } from '@nostrify/nostrify';
 
@@ -31,6 +32,9 @@ export function Post({ event }: PostProps) {
   const profileImage = metadata?.picture;
   const about = metadata?.about;
   const npub = nip19.npubEncode(event.pubkey);
+  
+  // Extract image URLs from event content
+  const imageUrls = extractImageUrls(event.content);
 
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
@@ -117,6 +121,23 @@ export function Post({ event }: PostProps) {
         <div className="whitespace-pre-wrap break-words mb-4">
           <NoteContent event={event} className="text-sm" />
         </div>
+
+        {/* Display images if found */}
+        {imageUrls.length > 0 && (
+          <div className="mb-4 space-y-2">
+            {imageUrls.map((imageUrl, index) => (
+              <div key={index} className="rounded-lg overflow-hidden border max-w-lg">
+                <img
+                  src={imageUrl}
+                  alt={`Image ${index + 1}`}
+                  className="w-full h-auto max-h-96 object-cover cursor-pointer hover:opacity-90 transition-opacity block"
+                  loading="lazy"
+                  onClick={() => window.open(imageUrl, '_blank')}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center justify-between max-w-md">
           <Button
