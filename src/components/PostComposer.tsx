@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+//import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useLoggedInAccounts } from "@/hooks/useLoggedInAccounts";
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
@@ -11,14 +12,15 @@ import { Image, Smile } from 'lucide-react';
 
 export function PostComposer() {
   const [content, setContent] = useState('');
-  const { user } = useCurrentUser();
-  const { mutate: createEvent, isPending } = useNostrPublish();
-  const author = useAuthor(user?.pubkey || '');
+  const { currentUser } = useLoggedInAccounts();
 
-  if (!user) return null;
+  const { mutate: createEvent, isPending } = useNostrPublish();
+  const author = useAuthor(currentUser?.pubkey || '');
+
+  if (!currentUser) return null;
 
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(user.pubkey);
+  const displayName = metadata?.name || genUserName(currentUser.pubkey);
   const profileImage = metadata?.picture;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,7 +63,7 @@ export function PostComposer() {
             className="min-h-[100px] resize-none border-0 text-lg placeholder:text-xl focus-visible:ring-0 focus-visible:ring-offset-0"
             maxLength={maxCharacters + 50}
           />
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -71,7 +73,7 @@ export function PostComposer() {
                 <Smile className="h-4 w-4" />
               </Button>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <span className={`text-sm ${isOverLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
@@ -101,8 +103,8 @@ export function PostComposer() {
                   </svg>
                 </div>
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={!content.trim() || isPending || isOverLimit}
                 className="rounded-full px-6"
               >
