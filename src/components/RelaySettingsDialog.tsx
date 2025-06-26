@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MultiRelaySelector } from "@/components/MultiRelaySelector";
 
 interface RelaySettingsDialogProps {
@@ -12,11 +12,11 @@ export function RelaySettingsDialog({ isOpen, onClose }: RelaySettingsDialogProp
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Relay Settings</DialogTitle>
+          <DialogDescription>
+            Select which relays to use for searching and publishing posts.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Select which relays to use for searching and publishing posts.
-          </p>
           <MultiRelaySelector className="w-full" />
         </div>
       </DialogContent>

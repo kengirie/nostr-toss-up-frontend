@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-//import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useLoggedInAccounts } from "@/hooks/useLoggedInAccounts";
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useAuthor } from '@/hooks/useAuthor';
