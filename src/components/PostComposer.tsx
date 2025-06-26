@@ -7,7 +7,6 @@ import { useLoggedInAccounts } from "@/hooks/useLoggedInAccounts";
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
-import { Image, Smile } from 'lucide-react';
 
 export function PostComposer() {
   const [content, setContent] = useState('');
@@ -65,12 +64,6 @@ export function PostComposer() {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Image className="h-4 w-4" />
-              </Button>
-              <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Smile className="h-4 w-4" />
-              </Button>
             </div>
 
             <div className="flex items-center space-x-3">
