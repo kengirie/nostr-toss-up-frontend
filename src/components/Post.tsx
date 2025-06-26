@@ -4,6 +4,12 @@ import { nip19 } from 'nostr-tools';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { NoteContent } from '@/components/NoteContent';
 import { ReplyBox } from '@/components/ReplyBox';
 import { useAuthor } from '@/hooks/useAuthor';
@@ -11,7 +17,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { genUserName } from '@/lib/genUserName';
 import { extractImageUrls } from '@/lib/extractImages';
-import { Heart, MessageCircle, Repeat2, MoreHorizontal } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, MoreHorizontal, Copy, FileText } from 'lucide-react';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 interface PostProps {
@@ -32,7 +38,7 @@ export function Post({ event }: PostProps) {
   const profileImage = metadata?.picture;
   const about = metadata?.about;
   const npub = nip19.npubEncode(event.pubkey);
-  
+
   // Extract image URLs from event content
   const imageUrls = extractImageUrls(event.content);
 
@@ -87,6 +93,28 @@ export function Post({ event }: PostProps) {
     setShowReplyBox(!showReplyBox);
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+    }
+  };
+
+  const handleCopyNevent = () => {
+    const nevent = nip19.neventEncode({
+      id: event.id,
+      author: event.pubkey,
+      kind: event.kind,
+    });
+    copyToClipboard(nevent);
+  };
+
+  const handleCopyJson = () => {
+    const eventJson = JSON.stringify(event, null, 2);
+    copyToClipboard(eventJson);
+  };
+
   return (
     <Card className="hover:bg-muted/30 transition-colors">
       <CardHeader className="pb-3">
@@ -111,9 +139,23 @@ export function Post({ event }: PostProps) {
               <p className="text-xs text-muted-foreground truncate mt-1">{about}</p>
             )}
           </div>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleCopyNevent} className="flex items-center gap-2">
+                <Copy className="h-4 w-4" />
+                Copy Event ID (nevent)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCopyJson} className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Copy JSON
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
 
