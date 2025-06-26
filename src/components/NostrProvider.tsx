@@ -10,21 +10,17 @@ interface NostrProviderProps {
 
 const NostrProvider: React.FC<NostrProviderProps> = (props) => {
   const { children } = props;
-  const { config, presetRelays } = useAppContext();
+  const { config } = useAppContext();
 
   const queryClient = useQueryClient();
 
   // Create NPool instance only once
   const pool = useRef<NPool | undefined>(undefined);
 
-  // Use refs so the pool always has the latest data
-  const relayUrl = useRef<string>(config.relayUrl);
-
-  // Update refs when config changes
+  // Update when selectedRelays changes
   useEffect(() => {
-    relayUrl.current = config.relayUrl;
     queryClient.resetQueries();
-  }, [config.relayUrl, queryClient]);
+  }, [config.selectedRelays, queryClient]);
 
   // Initialize NPool only once
   if (!pool.current) {
@@ -34,19 +30,19 @@ const NostrProvider: React.FC<NostrProviderProps> = (props) => {
       },
       reqRouter(filters) {
         // Use selected relays for queries
-        const selectedRelays = config.selectedRelays || [relayUrl.current];
-        
+        const selectedRelays = config.selectedRelays;
+
         // Create map with selected relays using the same filters
         const relayMap = new Map<string, typeof filters>();
         for (const relay of selectedRelays) {
           relayMap.set(relay, filters);
         }
-        
+
         return relayMap;
       },
       eventRouter(_event: NostrEvent) {
         // Publish to selected relays (same as query relays)
-        const selectedRelays = config.selectedRelays || [relayUrl.current];
+        const selectedRelays = config.selectedRelays;
         return selectedRelays;
       },
     });

@@ -39,11 +39,14 @@ const defaultConfig: AppConfig = {
 };
 
 const presetRelays = [
-  { url: 'wss://yabu.me', name: 'Yabu.me' },
-  { url: 'wss://ditto.pub/relay', name: 'Ditto' },
-  { url: 'wss://relay.nostr.band', name: 'Nostr.Band' },
-  { url: 'wss://relay.damus.io', name: 'Damus' },
-  { url: 'wss://relay.primal.net', name: 'Primal' },
+  { url: "wss://yabu.me", name: "Yabu.me" },
+  {
+    url: "wss://relay-jp.nostr.wirednet.jp",
+    name: "relay-jp.nostr.wirednet.jp",
+  },
+  { url: "wss://r.kojira.io", name: "kojirelay" },
+  { url: "wss://relay.damus.io", name: "Damus" },
+  { url: "wss://relay.primal.net", name: "Primal" },
 ];
 
 export function App() {
