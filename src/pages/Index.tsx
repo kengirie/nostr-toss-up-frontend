@@ -1,8 +1,8 @@
 import { useSeoMeta } from '@unhead/react';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PostComposer } from '@/components/PostComposer';
-import { Timeline } from '@/components/Timeline';
 import { NewUsersTimeline } from '@/components/NewUsersTimeline';
+import { IsolatedUsersTimeline } from '@/components/IsolatedUsersTimeline';
 import { RelaySettingsButton } from '@/components/RelaySettingsButton';
 const Index = () => {
 
@@ -33,18 +33,19 @@ const Index = () => {
       <main className="container mx-auto max-w-2xl px-4 py-6">
           <div className="space-y-6">
             <PostComposer />
-            
+
             {/* New Users Timeline */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-foreground">New Users</h2>
               <NewUsersTimeline />
             </div>
             
-            {/* General Timeline */}
+            {/* Isolated Users Timeline */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-foreground">Timeline</h2>
-              <Timeline />
+              <h2 className="text-lg font-semibold text-foreground">Isolated Users</h2>
+              <IsolatedUsersTimeline />
             </div>
+            
           </div>
       </main>
     </div>
