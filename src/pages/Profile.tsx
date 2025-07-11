@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/components/Post';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { genUserName } from '@/lib/genUserName';
-import { Calendar, Link as LinkIcon } from 'lucide-react';
+import { Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RelaySettingsButton } from '@/components/RelaySettingsButton';
 import type { NostrEvent } from '@nostrify/nostrify';
@@ -147,13 +147,6 @@ export default function Profile() {
     }, 1000);
   };
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -233,10 +226,6 @@ export default function Profile() {
                     </div>
                   )}
 
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>Joined {formatDate(author.data?.event?.created_at || 0)}</span>
-                  </div>
                 </div>
               </div>
             </div>
