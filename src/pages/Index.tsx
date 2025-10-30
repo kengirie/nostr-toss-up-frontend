@@ -2,7 +2,6 @@ import { useSeoMeta } from '@unhead/react';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { PostComposer } from '@/components/PostComposer';
 import { NewUsersTimeline } from '@/components/NewUsersTimeline';
-import { IsolatedUsersTimeline } from '@/components/IsolatedUsersTimeline';
 import { RelaySettingsButton } from '@/components/RelaySettingsButton';
 const Index = () => {
 
@@ -34,18 +33,8 @@ const Index = () => {
           <div className="space-y-6">
             <PostComposer />
 
-            {/* New Users Timeline */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-foreground">New Users</h2>
-              <NewUsersTimeline />
-            </div>
-            
-            {/* Isolated Users Timeline */}
-            <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-foreground">Isolated Users</h2>
-              <IsolatedUsersTimeline />
-            </div>
-            
+            <NewUsersTimeline />
+
           </div>
       </main>
     </div>
