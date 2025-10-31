@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useSeoMeta } from '@unhead/react';
@@ -5,6 +6,7 @@ import { nip19 } from 'nostr-tools';
 import { useNostr } from '@/hooks/useNostr';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useLoggedInAccounts } from '@/hooks/useLoggedInAccounts';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/components/Post';
 import { LoginArea } from '@/components/auth/LoginArea';
+import LoginDialog from '@/components/auth/LoginDialog';
 import { genUserName } from '@/lib/genUserName';
 import { Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -27,8 +30,10 @@ function validateTextNote(event: NostrEvent): boolean {
 export default function Profile() {
   const { nip19: nip19Param } = useParams<{ nip19: string }>();
   const { user } = useCurrentUser();
+  const { currentUser } = useLoggedInAccounts();
   const { nostr } = useNostr();
   const { mutate: createEvent, isPending: isPublishing } = useNostrPublish();
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   let pubkey = '';
   let isValidNip19 = false;
@@ -56,17 +61,17 @@ export default function Profile() {
 
   // Get current user's follow list (kind 3)
   const { data: followList, refetch: refetchFollowList } = useQuery({
-    queryKey: ['follow-list', user?.pubkey],
+    queryKey: ['follow-list', currentUser?.pubkey],
     queryFn: async (c) => {
-      if (!user?.pubkey) return null;
+      if (!currentUser?.pubkey) return null;
       const signal = AbortSignal.any([c.signal, AbortSignal.timeout(5000)]);
       const events = await nostr.query([
-        { kinds: [3], authors: [user.pubkey], limit: 1 }
+        { kinds: [3], authors: [currentUser.pubkey], limit: 1 }
       ], { signal });
 
       return events[0] || null;
     },
-    enabled: !!user?.pubkey,
+    enabled: !!currentUser?.pubkey,
   });
 
   const { data: posts, isLoading: postsLoading } = useQuery({
@@ -87,9 +92,9 @@ export default function Profile() {
   if (!isValidNip19 || !pubkey) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-          <div className="container mx-auto max-w-2xl px-4 py-3">
-            <div className="flex items-center justify-between">
+        <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto max-w-2xl px-4 h-16">
+            <div className="flex items-center justify-between h-full">
               <Link to="/">
                 <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
                 <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
@@ -120,7 +125,18 @@ export default function Profile() {
   ) || false;
 
   const handleFollowToggle = async () => {
-    if (!user?.pubkey || !pubkey) return;
+    // UI表示用のチェック（currentUserを使用）
+    if (!currentUser?.pubkey) {
+      setLoginDialogOpen(true);
+      return;
+    }
+
+    // イベント作成用のチェック（userのsignerが必要）
+    if (!user) {
+      return;
+    }
+
+    if (!pubkey) return;
 
     const currentTags = followList?.tags || [];
     let newTags;
@@ -147,12 +163,15 @@ export default function Profile() {
     }, 1000);
   };
 
+  const handleLogin = () => {
+    setLoginDialogOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto max-w-2xl px-4 py-3">
-          <div className="flex items-center justify-between">
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto max-w-2xl px-4 h-16">
+          <div className="flex items-center justify-between h-full">
             <Link to="/">
               <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
                 <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
@@ -192,14 +211,13 @@ export default function Profile() {
                   </AvatarFallback>
                 </Avatar>
 
-
-                  <Button
-                    variant={isFollowing ? "default" : "outline"}
-                    onClick={handleFollowToggle}
-                    disabled={isPublishing}
-                  >
-                    {isFollowing ? "Following" : "Follow"}
-                  </Button>
+                <Button
+                  variant={isFollowing ? "default" : "outline"}
+                  onClick={handleFollowToggle}
+                  disabled={isPublishing}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </Button>
               </div>
 
               <div className="space-y-2">
@@ -271,6 +289,12 @@ export default function Profile() {
           )}
         </div>
       </main>
+
+      <LoginDialog
+        isOpen={loginDialogOpen}
+        onClose={() => setLoginDialogOpen(false)}
+        onLogin={handleLogin}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { NoteContent } from '@/components/NoteContent';
 import { ReplyBox } from '@/components/ReplyBox';
+import LoginDialog from '@/components/auth/LoginDialog';
 import { useAuthor } from '@/hooks/useAuthor';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
@@ -28,6 +29,7 @@ export function Post({ event }: PostProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isReposted, setIsReposted] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   const { user } = useCurrentUser();
   const { mutate: createEvent, isPending } = useNostrPublish();
@@ -59,7 +61,10 @@ export function Post({ event }: PostProps) {
   };
 
   const handleLike = () => {
-    if (!user) return;
+    if (!user) {
+      setLoginDialogOpen(true);
+      return;
+    }
 
     createEvent({
       kind: 7,
@@ -69,13 +74,18 @@ export function Post({ event }: PostProps) {
         ['p', event.pubkey],
         ['k', '1']
       ]
+    }, {
+      onSuccess: () => {
+        setIsLiked(!isLiked);
+      }
     });
-
-    setIsLiked(!isLiked);
   };
 
   const handleRepost = () => {
-    if (!user) return;
+    if (!user) {
+      setLoginDialogOpen(true);
+      return;
+    }
 
     createEvent({
       kind: 6,
@@ -84,13 +94,23 @@ export function Post({ event }: PostProps) {
         ['e', event.id],
         ['p', event.pubkey]
       ]
+    }, {
+      onSuccess: () => {
+        setIsReposted(!isReposted);
+      }
     });
-
-    setIsReposted(!isReposted);
   };
 
   const handleReply = () => {
+    if (!user) {
+      setLoginDialogOpen(true);
+      return;
+    }
     setShowReplyBox(!showReplyBox);
+  };
+
+  const handleLogin = () => {
+    setLoginDialogOpen(false);
   };
 
   const copyToClipboard = async (text: string) => {
@@ -231,6 +251,12 @@ export function Post({ event }: PostProps) {
           />
         )}
       </CardContent>
+
+      <LoginDialog
+        isOpen={loginDialogOpen}
+        onClose={() => setLoginDialogOpen(false)}
+        onLogin={handleLogin}
+      />
     </Card>
   );
 }
