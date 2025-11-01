@@ -76,7 +76,7 @@ describe('NoteContent', () => {
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
-  it('renders hashtags as links', () => {
+  it('renders hashtags as plain text', () => {
     const event: NostrEvent = {
       id: 'test-id',
       pubkey: 'test-pubkey',
@@ -93,16 +93,12 @@ describe('NoteContent', () => {
       </TestApp>
     );
 
-    const nostrHashtag = screen.getByRole('link', { name: '#nostr' });
-    const bitcoinHashtag = screen.getByRole('link', { name: '#bitcoin' });
-    
-    expect(nostrHashtag).toBeInTheDocument();
-    expect(bitcoinHashtag).toBeInTheDocument();
-    expect(nostrHashtag).toHaveAttribute('href', '/t/nostr');
-    expect(bitcoinHashtag).toHaveAttribute('href', '/t/bitcoin');
+    // Hashtags should be rendered as plain text, not links
+    expect(screen.getByText('This is a post about #nostr and #bitcoin development.')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
-  it('generates deterministic names for users without metadata and styles them differently', () => {
+  it('renders nostr URIs as plain text', () => {
     // Use a valid npub for testing
     const event: NostrEvent = {
       id: 'test-id',
@@ -120,17 +116,8 @@ describe('NoteContent', () => {
       </TestApp>
     );
 
-    // The mention should be rendered with a deterministic name
-    const mention = screen.getByRole('link');
-    expect(mention).toBeInTheDocument();
-    
-    // Should have muted styling for generated names (gray instead of blue)
-    expect(mention).toHaveClass('text-gray-500');
-    expect(mention).not.toHaveClass('text-blue-500');
-    
-    // The text should start with @ and contain a generated name (not a truncated npub)
-    const linkText = mention.textContent;
-    expect(linkText).not.toMatch(/^@npub1/); // Should not be a truncated npub
-    expect(linkText).toEqual("@Swift Falcon");
+    // Nostr URIs should be rendered as plain text, not links
+    expect(screen.getByText('Mentioning nostr:npub1zg69v7ys40x77y352eufp27daufrg4ncjz4ummcjx3t83y9tehhsqepuh0')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 });

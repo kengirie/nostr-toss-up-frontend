@@ -34,7 +34,11 @@ const defaultConfig: AppConfig = {
   theme: "light",
   relayUrl: "wss://relay.nostr.band",
   selectedRelays: [
-    "wss://yabu.me"
+    "wss://yabu.me",
+    "wss://relay-jp.nostr.wirednet.jp",
+    "wss://r.kojira.io",
+    "wss://relay.damus.io",
+    "wss://relay.primal.net"
   ],
 };
 
