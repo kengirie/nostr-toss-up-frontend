@@ -18,7 +18,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { genUserName } from '@/lib/genUserName';
 import { extractImageUrls } from '@/lib/extractImages';
-import { Heart, MessageCircle, Repeat2, MoreHorizontal, Copy, FileText } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, MoreHorizontal, Copy, FileText, User } from 'lucide-react';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 interface PostProps {
@@ -135,6 +135,10 @@ export function Post({ event }: PostProps) {
     copyToClipboard(eventJson);
   };
 
+  const handleCopyPubkey = () => {
+    copyToClipboard(event.pubkey);
+  };
+
   return (
     <Card className="hover:bg-muted/30 transition-colors">
       <CardHeader className="pb-3">
@@ -166,6 +170,10 @@ export function Post({ event }: PostProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleCopyPubkey} className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Copy Pubkey
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCopyNevent} className="flex items-center gap-2">
                 <Copy className="h-4 w-4" />
                 Copy Event ID (nevent)
