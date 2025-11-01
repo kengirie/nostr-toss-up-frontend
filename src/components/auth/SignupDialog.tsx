@@ -1,7 +1,7 @@
 // NOTE: This file is stable and usually should not be modified.
 // It is important that all functionality in this file is preserved, and should only be modified if explicitly requested.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import {
@@ -25,6 +25,15 @@ const SignupDialog: React.FC<SignupDialogProps> = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [nsec, setNsec] = useState('');
   const login = useLoginActions();
+
+  // Reset state when dialog is opened
+  useEffect(() => {
+    if (isOpen) {
+      setStep('generate');
+      setIsLoading(false);
+      setNsec('');
+    }
+  }, [isOpen]);
 
   // Generate a proper nsec key using nostr-tools
   const generateKey = () => {
