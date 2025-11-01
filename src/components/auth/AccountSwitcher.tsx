@@ -2,6 +2,7 @@
 // It is important that all functionality in this file is preserved, and should only be modified if explicitly requested.
 
 import { LogOut, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,7 @@ import { nip19 } from 'nostr-tools';
 
 export function AccountSwitcher() {
   const { currentUser, removeLogin } = useLoggedInAccounts();
+  const navigate = useNavigate();
 
   if (!currentUser) return null;
 
@@ -36,7 +38,7 @@ export function AccountSwitcher() {
         <DropdownMenuItem
           onClick={() => {
             const npub = nip19.npubEncode(currentUser.pubkey);
-            window.location.href = `/profile/${npub}`;
+            navigate(`/profile/${npub}`);
           }}
           className='flex items-center gap-2 cursor-pointer p-2 rounded-md'
         >

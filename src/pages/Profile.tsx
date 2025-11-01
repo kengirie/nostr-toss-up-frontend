@@ -13,12 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/components/Post';
-import { LoginArea } from '@/components/auth/LoginArea';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { genUserName } from '@/lib/genUserName';
 import { Link as LinkIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { RelaySettingsButton } from '@/components/RelaySettingsButton';
 import type { NostrEvent } from '@nostrify/nostrify';
 
 function validateTextNote(event: NostrEvent): boolean {
@@ -91,31 +88,13 @@ export default function Profile() {
 
   if (!isValidNip19 || !pubkey) {
     return (
-      <div className="min-h-screen bg-background">
-        <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container mx-auto max-w-2xl px-4 h-16">
-            <div className="flex items-center justify-between h-full">
-              <Link to="/">
-                <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
-                <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
-                <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
-              </div>
-              </Link>
-              <div className="flex items-center gap-2">
-                <RelaySettingsButton />
-                <LoginArea className="max-w-60" />
-              </div>
-            </div>
-          </div>
-        </header>
-        <main className="container mx-auto max-w-2xl px-4 py-6">
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">Invalid profile identifier</p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
+      <main className="container mx-auto max-w-2xl px-4 py-6">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Invalid profile identifier</p>
+          </CardContent>
+        </Card>
+      </main>
     );
   }
 
@@ -168,24 +147,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto max-w-2xl px-4 h-16">
-          <div className="flex items-center justify-between h-full">
-            <Link to="/">
-              <div className="flex items-center gap-2 pl-3 hover:opacity-80 transition-opacity cursor-pointer">
-                <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
-                <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
-              </div>
-            </Link>
-            <div className="flex items-center gap-2">
-              <RelaySettingsButton/>
-              <LoginArea className="max-w-60" />
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <>
       <main className="container mx-auto max-w-2xl px-4">
         {/* Profile Header */}
         <Card className="mt-6">
@@ -295,6 +257,6 @@ export default function Profile() {
         onClose={() => setLoginDialogOpen(false)}
         onLogin={handleLogin}
       />
-    </div>
+    </>
   );
 }
