@@ -4,6 +4,8 @@ import { Header } from "./components/Header";
 
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
+import Users from "./pages/Users";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 export function AppRouter() {
@@ -20,6 +22,8 @@ export function AppRouter() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/profile/:nip19" element={<Profile />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
