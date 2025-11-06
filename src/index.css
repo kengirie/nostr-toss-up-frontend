@@ -96,6 +96,7 @@
   }
 
   body {
+    scrollbar-gutter: stable;
     @apply bg-background text-foreground;
   }
 }
