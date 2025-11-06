@@ -48,10 +48,10 @@ export function PostComposer() {
             <AvatarImage src={profileImage} alt={displayName} />
             <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm truncate">{displayName}</p>
+          <div className="flex-1 overflow-hidden">
+            <p className="font-semibold text-sm break-words">{displayName}</p>
             {userName && (
-              <p className="text-xs text-muted-foreground truncate">@{userName}</p>
+              <p className="text-xs text-muted-foreground break-words">@{userName}</p>
             )}
           </div>
         </div>

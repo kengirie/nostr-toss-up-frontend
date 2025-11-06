@@ -43,9 +43,9 @@ export function AccountSwitcher() {
       <DropdownMenuContent className='w-56 p-2 animate-scale-in'>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-semibold leading-none truncate'>{getDisplayName(currentUser)}</p>
+            <p className='text-sm font-semibold leading-none break-words'>{getDisplayName(currentUser)}</p>
             {getUserName(currentUser) && (
-              <p className='text-xs leading-none text-muted-foreground truncate'>@{getUserName(currentUser)}</p>
+              <p className='text-xs leading-none text-muted-foreground break-words'>@{getUserName(currentUser)}</p>
             )}
           </div>
         </DropdownMenuLabel>

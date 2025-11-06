@@ -151,15 +151,15 @@ export function Post({ event }: PostProps) {
             </Avatar>
           </Link>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 min-w-0">
-              <Link to={`/profile/${npub}`} className="hover:underline min-w-0 flex-shrink">
-                <p className="font-semibold text-sm truncate">{displayName}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link to={`/profile/${npub}`} className="hover:underline">
+                <p className="font-semibold text-sm">{displayName}</p>
               </Link>
               {userName && (
-                <span className="text-muted-foreground text-xs truncate">@{userName}</span>
+                <span className="text-muted-foreground text-xs">@{userName}</span>
               )}
-              <span className="text-muted-foreground text-sm flex-shrink-0">·</span>
-              <span className="text-muted-foreground text-sm flex-shrink-0">
+              <span className="text-muted-foreground text-sm">·</span>
+              <span className="text-muted-foreground text-sm">
                 {formatDate(event.created_at)}
               </span>
             </div>

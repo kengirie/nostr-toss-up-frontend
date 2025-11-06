@@ -185,9 +185,9 @@ export default function Profile() {
 
               <div className="space-y-2">
                 <div>
-                  <h2 className="text-xl font-bold truncate">{displayName}</h2>
+                  <h2 className="text-xl font-bold break-words">{displayName}</h2>
                   {userName && (
-                    <p className="text-sm text-muted-foreground truncate">@{userName}</p>
+                    <p className="text-sm text-muted-foreground break-words">@{userName}</p>
                   )}
                 </div>
 
