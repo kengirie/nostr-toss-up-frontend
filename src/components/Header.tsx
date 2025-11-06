@@ -39,12 +39,12 @@ export function Header() {
                     onPointerEnter={(e) => e.preventDefault()}
                     onPointerLeave={(e) => e.preventDefault()}
                   >
-                    <div className="grid gap-3 p-4 w-48">
+                    <div className="grid gap-2 p-3 w-36">
                       <NavigationMenuLink asChild>
                         <Link
                           to="/"
                           className={cn(
-                            "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            "block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           )}
                         >
                           <div className="text-sm font-medium leading-none">Timeline</div>
@@ -54,7 +54,7 @@ export function Header() {
                         <Link
                           to="/users"
                           className={cn(
-                            "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            "block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           )}
                         >
                           <div className="text-sm font-medium leading-none">New Users</div>
@@ -64,7 +64,7 @@ export function Header() {
                         <button
                           onClick={() => setRelaySettingsOpen(true)}
                           className={cn(
-                            "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground w-full text-left"
+                            "block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground w-full text-left"
                           )}
                         >
                           <div className="text-sm font-medium leading-none">Relays</div>
@@ -74,7 +74,7 @@ export function Header() {
                         <Link
                           to="/about"
                           className={cn(
-                            "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            "block select-none rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           )}
                         >
                           <div className="text-sm font-medium leading-none">About</div>
