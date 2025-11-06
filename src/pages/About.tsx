@@ -18,7 +18,7 @@ export default function About() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              のすとら胴上げ部は、新規日本人ユーザを継続的に胴上げしNostrに定住してもらうことを目的としたミニマムオレオレレコメンドクライアントです。
+              のすとら胴上げ部は、新規日本人ユーザを継続的に胴上げし、Nostrに定住してもらうことを目的としたレコメンドクライアントです。
             </p>
           </CardContent>
         </Card>
@@ -36,6 +36,17 @@ export default function About() {
                 className="text-blue-600 hover:text-blue-800 transition-colors"
               >
                 MKStack
+              </a>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              イラスト素材:{' '}
+              <a
+                href="https://www.irasutoya.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                いらすとや
               </a>
             </p>
           </CardContent>

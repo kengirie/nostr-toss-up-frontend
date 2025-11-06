@@ -19,27 +19,23 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto max-w-2xl px-4 h-16">
         <div className="flex items-center justify-between h-full">
-          <Link to="/">
-            <div className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
-              <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
-              <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
-            </div>
-          </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     onPointerMove={(e) => e.preventDefault()}
                     onPointerLeave={(e) => e.preventDefault()}
+                    className="h-9 w-9 pl-0 pr-0"
                   >
-                    Menu
+                    <span className="sr-only">Menu</span>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
                     onPointerEnter={(e) => e.preventDefault()}
                     onPointerLeave={(e) => e.preventDefault()}
+                    className="w-fit min-w-[7rem]"
                   >
-                    <div className="grid gap-2 p-3 w-36">
+                    <div className="grid gap-1.5 p-2.5">
                       <NavigationMenuLink asChild>
                         <Link
                           to="/"
@@ -85,8 +81,12 @@ export function Header() {
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
-            <LoginArea className="max-w-60" />
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
+              <img src="/douage.png" alt="のすとら胴上げ部" className="w-8 h-8" />
+              <h1 className="text-xl font-bold">のすとら胴上げ部</h1>
+            </Link>
           </div>
+          <LoginArea className="max-w-60" />
         </div>
       </div>
 
