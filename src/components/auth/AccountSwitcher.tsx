@@ -7,6 +7,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx';
@@ -21,7 +23,11 @@ export function AccountSwitcher() {
   if (!currentUser) return null;
 
   const getDisplayName = (account: Account): string => {
-    return account.metadata.name ?? genUserName(account.pubkey);
+    return account.metadata.display_name ?? account.metadata.name ?? genUserName(account.pubkey);
+  }
+
+  const getUserName = (account: Account): string | undefined => {
+    return account.metadata.name;
   }
 
   return (
@@ -35,6 +41,15 @@ export function AccountSwitcher() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56 p-2 animate-scale-in'>
+        <DropdownMenuLabel className='font-normal'>
+          <div className='flex flex-col space-y-1'>
+            <p className='text-sm font-semibold leading-none'>{getDisplayName(currentUser)}</p>
+            {getUserName(currentUser) && (
+              <p className='text-xs leading-none text-muted-foreground'>@{getUserName(currentUser)}</p>
+            )}
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             const npub = nip19.npubEncode(currentUser.pubkey);

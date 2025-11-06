@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { genUserName } from '@/lib/genUserName';
-import type { NostrEvent } from '@nostrify/nostrify';
 
 interface UserCardProps {
   pubkey: string;
@@ -28,7 +27,8 @@ function UserCard({ pubkey }: UserCardProps) {
   const { mutate: createEvent, isPending: isPublishing } = useNostrPublish();
   const author = useAuthor(pubkey);
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(pubkey);
+  const displayName = metadata?.display_name || metadata?.name || genUserName(pubkey);
+  const userName = metadata?.name;
   const npub = nip19.npubEncode(pubkey);
 
   // Get current user's follow list (kind 3)
@@ -109,6 +109,9 @@ function UserCard({ pubkey }: UserCardProps) {
               <Link to={`/profile/${npub}`} className="hover:underline min-w-0 flex-shrink">
                 <p className="font-semibold text-sm truncate">{displayName}</p>
               </Link>
+              {userName && (
+                <span className="text-muted-foreground text-xs flex-shrink-0">@{userName}</span>
+              )}
             </div>
             {metadata?.about && (
               <p className="text-xs text-muted-foreground truncate mt-1">{metadata.about}</p>

@@ -23,7 +23,7 @@ export function ReplyBox({ replyTo, onReplyPosted, onCancel }: ReplyBoxProps) {
   if (!user) return null;
 
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(user.pubkey);
+  const displayName = metadata?.display_name || metadata?.name || genUserName(user.pubkey);
   const profileImage = metadata?.picture;
 
   const handleSubmit = (e: React.FormEvent) => {

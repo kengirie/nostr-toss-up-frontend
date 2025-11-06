@@ -36,7 +36,8 @@ export function Post({ event }: PostProps) {
   const author = useAuthor(event.pubkey);
 
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(event.pubkey);
+  const displayName = metadata?.display_name || metadata?.name || genUserName(event.pubkey);
+  const userName = metadata?.name;
   const profileImage = metadata?.picture;
   const about = metadata?.about;
   const npub = nip19.npubEncode(event.pubkey);
@@ -154,6 +155,9 @@ export function Post({ event }: PostProps) {
               <Link to={`/profile/${npub}`} className="hover:underline min-w-0 flex-shrink">
                 <p className="font-semibold text-sm truncate">{displayName}</p>
               </Link>
+              {userName && (
+                <span className="text-muted-foreground text-xs flex-shrink-0">@{userName}</span>
+              )}
               <span className="text-muted-foreground text-sm flex-shrink-0">·</span>
               <span className="text-muted-foreground text-sm flex-shrink-0">
                 {formatDate(event.created_at)}

@@ -18,7 +18,8 @@ export function PostComposer() {
   if (!currentUser) return null;
 
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(currentUser.pubkey);
+  const displayName = metadata?.display_name || metadata?.name || genUserName(currentUser.pubkey);
+  const userName = metadata?.name;
   const profileImage = metadata?.picture;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,6 +50,9 @@ export function PostComposer() {
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-sm truncate">{displayName}</p>
+            {userName && (
+              <p className="text-xs text-muted-foreground truncate">@{userName}</p>
+            )}
           </div>
         </div>
       </CardHeader>
