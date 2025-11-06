@@ -37,7 +37,7 @@ export function Post({ event }: PostProps) {
 
   const metadata = author.data?.metadata;
   const displayName = metadata?.display_name || metadata?.name || genUserName(event.pubkey);
-  const userName = metadata?.name;
+  const userName = metadata?.display_name ? metadata?.name : undefined;
   const profileImage = metadata?.picture;
   const about = metadata?.about;
   const npub = nip19.npubEncode(event.pubkey);
@@ -156,7 +156,7 @@ export function Post({ event }: PostProps) {
                 <p className="font-semibold text-sm truncate">{displayName}</p>
               </Link>
               {userName && (
-                <span className="text-muted-foreground text-xs flex-shrink-0">@{userName}</span>
+                <span className="text-muted-foreground text-xs truncate">@{userName}</span>
               )}
               <span className="text-muted-foreground text-sm flex-shrink-0">·</span>
               <span className="text-muted-foreground text-sm flex-shrink-0">
