@@ -19,7 +19,7 @@ export function PostComposer() {
 
   const metadata = author.data?.metadata;
   const displayName = metadata?.display_name || metadata?.name || genUserName(currentUser.pubkey);
-  const userName = metadata?.name;
+  const userName = metadata?.display_name ? metadata?.name : undefined;
   const profileImage = metadata?.picture;
 
   const handleSubmit = (e: React.FormEvent) => {

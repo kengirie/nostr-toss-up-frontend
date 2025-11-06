@@ -28,7 +28,7 @@ function UserCard({ pubkey }: UserCardProps) {
   const author = useAuthor(pubkey);
   const metadata = author.data?.metadata;
   const displayName = metadata?.display_name || metadata?.name || genUserName(pubkey);
-  const userName = metadata?.name;
+  const userName = metadata?.display_name ? metadata?.name : undefined;
   const npub = nip19.npubEncode(pubkey);
 
   // Get current user's follow list (kind 3)
@@ -110,7 +110,7 @@ function UserCard({ pubkey }: UserCardProps) {
                 <p className="font-semibold text-sm truncate">{displayName}</p>
               </Link>
               {userName && (
-                <span className="text-muted-foreground text-xs flex-shrink-0">@{userName}</span>
+                <span className="text-muted-foreground text-xs truncate">@{userName}</span>
               )}
             </div>
             {metadata?.about && (
