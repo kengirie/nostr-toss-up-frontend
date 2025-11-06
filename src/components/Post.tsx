@@ -137,7 +137,7 @@ export function Post({ event }: PostProps) {
   };
 
   const handleCopyPubkey = () => {
-    copyToClipboard(event.pubkey);
+    copyToClipboard(npub);
   };
 
   return (
@@ -176,7 +176,7 @@ export function Post({ event }: PostProps) {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleCopyPubkey} className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Copy Pubkey
+                Copy npub
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCopyNevent} className="flex items-center gap-2">
                 <Copy className="h-4 w-4" />
