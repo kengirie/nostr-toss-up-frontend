@@ -49,7 +49,8 @@ export default function Profile() {
 
   const author = useAuthor(pubkey);
   const metadata = author.data?.metadata;
-  const displayName = metadata?.name || genUserName(pubkey);
+  const displayName = metadata?.display_name || metadata?.name || genUserName(pubkey);
+  const userName = metadata?.name;
 
   useSeoMeta({
     title: `${displayName} - のすとら胴上げ部`,
@@ -185,6 +186,9 @@ export default function Profile() {
               <div className="space-y-2">
                 <div>
                   <h2 className="text-xl font-bold truncate">{displayName}</h2>
+                  {userName && (
+                    <p className="text-sm text-muted-foreground">@{userName}</p>
+                  )}
                 </div>
 
                 {metadata?.about && (
