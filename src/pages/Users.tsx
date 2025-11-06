@@ -106,11 +106,11 @@ function UserCard({ pubkey }: UserCardProps) {
           </Link>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <Link to={`/profile/${npub}`} className="hover:underline">
-                <p className="font-semibold text-sm">{displayName}</p>
+              <Link to={`/profile/${npub}`} className="hover:underline max-w-full">
+                <p className="font-semibold text-sm break-words">{displayName}</p>
               </Link>
               {userName && (
-                <span className="text-muted-foreground text-xs">@{userName}</span>
+                <span className="text-muted-foreground text-xs break-words max-w-full">@{userName}</span>
               )}
             </div>
             {metadata?.about && (
