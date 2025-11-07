@@ -32,23 +32,23 @@ const queryClient = new QueryClient({
 
 const defaultConfig: AppConfig = {
   theme: "light",
-  relayUrl: "wss://relay.nostr.band",
+  relayUrl: "wss://r.kojira.io",
   selectedRelays: [
-    "wss://yabu.me",
-    "wss://relay-jp.nostr.wirednet.jp",
     "wss://r.kojira.io",
+    "wss://nos.lol",
+    "wss://relay-jp.nostr.wirednet.jp",
     "wss://relay.damus.io",
     "wss://relay.primal.net"
   ],
 };
 
 const presetRelays = [
-  { url: "wss://yabu.me", name: "Yabu.me" },
+  { url: "wss://r.kojira.io", name: "kojirelay" },
+  { url: "wss://nos.lol", name: "nos.lol" },
   {
     url: "wss://relay-jp.nostr.wirednet.jp",
     name: "relay-jp.nostr.wirednet.jp",
   },
-  { url: "wss://r.kojira.io", name: "kojirelay" },
   { url: "wss://relay.damus.io", name: "Damus" },
   { url: "wss://relay.primal.net", name: "Primal" },
 ];

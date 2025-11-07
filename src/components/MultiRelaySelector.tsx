@@ -14,49 +14,67 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppContext } from "@/hooks/useAppContext";
 
 interface MultiRelaySelectorProps {
   className?: string;
 }
 
+const REQUIRED_RELAYS = ['wss://r.kojira.io', 'wss://nos.lol'];
+
 export function MultiRelaySelector(props: MultiRelaySelectorProps) {
   const { className } = props;
   const { config, updateConfig, presetRelays = [] } = useAppContext();
   
-  const selectedRelays = config.selectedRelays || [];
+  const normalizeRelayUrl = (url: string): string => {
+    const trimmed = url.trim();
+    if (!trimmed) return trimmed;
+    
+    if (trimmed.includes('://')) {
+      return trimmed;
+    }
+    
+    return `wss://${trimmed}`;
+  };
+
+  const ensureRequiredRelays = (relays: string[]) => {
+    const normalizedRelays = Array.from(new Set(relays.map(normalizeRelayUrl)));
+    REQUIRED_RELAYS.slice().reverse().forEach((required) => {
+      if (!normalizedRelays.includes(required)) {
+        normalizedRelays.unshift(required);
+      }
+    });
+    return normalizedRelays;
+  };
+
+  const rawSelectedRelays = config.selectedRelays || [];
+  const selectedRelays = ensureRequiredRelays(rawSelectedRelays);
+
+  useEffect(() => {
+    const isDifferent =
+      selectedRelays.length !== rawSelectedRelays.length ||
+      selectedRelays.some((relay, index) => relay !== rawSelectedRelays[index]);
+
+    if (isDifferent) {
+      updateConfig((current) => ({ ...current, selectedRelays }));
+    }
+  }, [rawSelectedRelays, selectedRelays, updateConfig]);
+
   const setSelectedRelays = (relays: string[]) => {
-    // Ensure yabu.me is always included
-    const updatedRelays = relays.includes('wss://yabu.me') 
-      ? relays 
-      : ['wss://yabu.me', ...relays];
+    const updatedRelays = ensureRequiredRelays(relays);
     updateConfig((current) => ({ ...current, selectedRelays: updatedRelays }));
   };
 
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // Function to normalize relay URL by adding wss:// if no protocol is present
-  const normalizeRelayUrl = (url: string): string => {
-    const trimmed = url.trim();
-    if (!trimmed) return trimmed;
-    
-    // Check if it already has a protocol
-    if (trimmed.includes('://')) {
-      return trimmed;
-    }
-    
-    // Add wss:// prefix
-    return `wss://${trimmed}`;
-  };
-
-  // Toggle relay selection (yabu.me cannot be removed)
+  // Toggle relay selection (required relays cannot be removed)
   const toggleRelay = (relay: string) => {
     const normalizedRelay = normalizeRelayUrl(relay);
     if (selectedRelays.includes(normalizedRelay)) {
-      // Prevent yabu.me from being removed
-      if (normalizedRelay !== 'wss://yabu.me') {
+      // Prevent required relays from being removed
+      if (!REQUIRED_RELAYS.includes(normalizedRelay)) {
         setSelectedRelays(selectedRelays.filter(r => r !== normalizedRelay));
       }
     } else {
@@ -64,10 +82,11 @@ export function MultiRelaySelector(props: MultiRelaySelectorProps) {
     }
   };
 
-  // Remove relay (yabu.me cannot be removed)
+  // Remove relay (required relays cannot be removed)
   const removeRelay = (relay: string) => {
-    if (relay === 'wss://yabu.me') return; // Prevent yabu.me from being removed
-    setSelectedRelays(selectedRelays.filter(r => r !== relay));
+    const normalizedRelay = normalizeRelayUrl(relay);
+    if (REQUIRED_RELAYS.includes(normalizedRelay)) return; // Prevent required relays from being removed
+    setSelectedRelays(selectedRelays.filter(r => r !== normalizedRelay));
   };
 
   // Handle adding a custom relay
@@ -112,7 +131,7 @@ export function MultiRelaySelector(props: MultiRelaySelectorProps) {
             >
               <Wifi className="h-3 w-3" />
               <span className="truncate max-w-[120px]">{getRelayName(relay)}</span>
-              {relay !== 'wss://yabu.me' && (
+              {!REQUIRED_RELAYS.includes(relay) && (
                 <Button
                   variant="ghost"
                   size="sm"
